@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Injectors.iml" filepath="$PROJECT_DIR$/Injectors.iml" />
+      <module fileurl="file://$PROJECT_DIR$/buildSrc/buildSrc.iml" filepath="$PROJECT_DIR$/buildSrc/buildSrc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/injectors/injectors.iml" filepath="$PROJECT_DIR$/injectors/injectors.iml" />
+      <module fileurl="file://$PROJECT_DIR$/injectors-android/injectors-android.iml" filepath="$PROJECT_DIR$/injectors-android/injectors-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/injectors-annotations/injectors-annotations.iml" filepath="$PROJECT_DIR$/injectors-annotations/injectors-annotations.iml" />
+      <module fileurl="file://$PROJECT_DIR$/injectors-compiler/injectors-compiler.iml" filepath="$PROJECT_DIR$/injectors-compiler/injectors-compiler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/injectors-fragment/injectors-fragment.iml" filepath="$PROJECT_DIR$/injectors-fragment/injectors-fragment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
+    </modules>
+  </component>
+</project>
