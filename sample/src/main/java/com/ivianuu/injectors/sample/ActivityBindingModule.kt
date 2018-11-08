@@ -20,7 +20,7 @@ import com.ivianuu.injectors.ContributeInjector
 import dagger.Module
 
 /**
- * @author Manuel Wrage (IVIanuu)
+ * @author Manuel Wrage (IVIanu
  */
 @Module
 abstract class ActivityBindingModule {
@@ -28,5 +28,4 @@ abstract class ActivityBindingModule {
     @PerActivity
     @ContributeInjector(modules = [FragmentBindingModule_Contributions::class])
     abstract fun bindMainActivity(): MainActivity
-
 }
