@@ -36,7 +36,7 @@ dependencies {
 
 val sourcesJar = task("sourcesJar", Jar::class) {
     dependsOn("classes")
-// todo    from(sourceSets["main"].allSource)
+    from(sourceSets["main"].allSource)
     classifier = "sources"
 }
 
