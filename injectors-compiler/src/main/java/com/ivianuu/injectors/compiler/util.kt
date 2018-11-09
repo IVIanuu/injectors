@@ -35,9 +35,3 @@ fun writeFile(env: ProcessingEnvironment, file: JavaFile) {
 fun AnnotationMirror.getTypeListValue(name: String): List<TypeMirror> =
     (getAnnotationValue(this, name).value as List<AnnotationValue>)
         .map { it.value as TypeMirror }
-
-fun AnnotationMirror.getStringListValue(name: String): List<String> =
-    (getAnnotationValue(this, name).value as List<String>)
-
-fun AnnotationMirror.getTypeValue(name: String) =
-    getAnnotationValue(this, name).value as TypeMirror

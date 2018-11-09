@@ -18,19 +18,15 @@ package com.ivianuu.injectors.compiler
 
 import com.google.auto.common.BasicAnnotationProcessor
 import com.google.auto.service.AutoService
-import com.google.common.base.Ascii
 import com.google.common.base.Joiner
-import javax.annotation.processing.Processor
-import java.awt.color.ICC_Profile.CLASS_OUTPUT
 import java.io.IOException
 import java.io.Writer
+import javax.annotation.processing.Processor
 import javax.annotation.processing.RoundEnvironment
-import javax.tools.Diagnostic
-import javax.tools.JavaFileManager
 import javax.tools.StandardLocation
 
 @AutoService(Processor::class)
-class ContributorProcessor : BasicAnnotationProcessor() {
+class InjectorsProcessor : BasicAnnotationProcessor() {
 
     override fun initSteps() =
         mutableSetOf(ContributeInjectorProcessingStep(processingEnv))
