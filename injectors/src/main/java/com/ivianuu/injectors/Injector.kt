@@ -74,3 +74,6 @@ fun <T : Any> Injector.Companion.inject(instance: T, injectorsFinder: (T) -> Has
     val injector = injectorStore[instance]
     injector.inject(instance)
 }
+
+fun <T : Any> T.inject(injectorsFinder: (T) -> HasInjectors?) =
+    Injector.inject(this, injectorsFinder)
