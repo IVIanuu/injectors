@@ -16,7 +16,7 @@
 
 package com.ivianuu.injectors.sample
 
-import com.ivianuu.injectors.ContributeInjector
+import com.ivianuu.injectors.ContributesInjector
 import dagger.Module
 
 /**
@@ -26,7 +26,7 @@ import dagger.Module
 abstract class ViewBindingModule {
 
     @PerView
-    @ContributeInjector(modules = [MyModule1::class, MyModule2::class])
+    @ContributesInjector(modules = [MyModule1::class, MyModule2::class])
     abstract fun bindMyView(): MyView
 
 }

@@ -18,45 +18,12 @@ package com.ivianuu.injectors.compiler
 
 import com.google.auto.common.BasicAnnotationProcessor
 import com.google.auto.service.AutoService
-import com.google.common.base.Joiner
-import java.io.IOException
-import java.io.Writer
 import javax.annotation.processing.Processor
-import javax.annotation.processing.RoundEnvironment
-import javax.tools.StandardLocation
 
 @AutoService(Processor::class)
 class InjectorsProcessor : BasicAnnotationProcessor() {
 
     override fun initSteps() =
         mutableSetOf(ContributeInjectorProcessingStep(processingEnv))
-
-    override fun postRound(roundEnv: RoundEnvironment) {
-        if (roundEnv.processingOver()) {
-            try {
-                createProguardFile().use { writer ->
-                    writer.write(
-                        Joiner.on("\n")
-                            .join(
-                                "-identifiernamestring class dagger.android.internal.AndroidInjectionKeys {",
-                                "  java.lang.String of(java.lang.String);",
-                                "}"
-                            )
-                    )
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    private fun createProguardFile(): Writer = processingEnv
-        .filer
-        .createResource(
-            StandardLocation.CLASS_OUTPUT,
-            "",
-            "META-INF/proguard/com.ivianuu.injectors.InjectionKeys"
-        )
-        .openWriter()
 
 }

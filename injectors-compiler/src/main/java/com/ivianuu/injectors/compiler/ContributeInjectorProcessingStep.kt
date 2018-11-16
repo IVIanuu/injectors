@@ -20,7 +20,7 @@ import com.google.auto.common.AnnotationMirrors
 import com.google.auto.common.BasicAnnotationProcessor
 import com.google.auto.common.MoreElements
 import com.google.common.collect.SetMultimap
-import com.ivianuu.injectors.ContributeInjector
+import com.ivianuu.injectors.ContributesInjector
 import com.squareup.javapoet.ClassName
 import javax.annotation.processing.ProcessingEnvironment
 import javax.inject.Scope
@@ -35,7 +35,7 @@ class ContributeInjectorProcessingStep(
 ) : BasicAnnotationProcessor.ProcessingStep {
 
     override fun process(elementsByAnnotation: SetMultimap<Class<out Annotation>, Element>): MutableSet<Element> {
-        val descriptors = elementsByAnnotation[ContributeInjector::class.java]
+        val descriptors = elementsByAnnotation[ContributesInjector::class.java]
             .asSequence()
             .filterIsInstance<ExecutableElement>()
             .mapNotNull { createContributeInjectorDescriptor(it) }
@@ -55,13 +55,13 @@ class ContributeInjectorProcessingStep(
     }
 
     override fun annotations() =
-        mutableSetOf(ContributeInjector::class.java)
+        mutableSetOf(ContributesInjector::class.java)
 
     private fun createContributeInjectorDescriptor(element: ExecutableElement): ContributeInjectorDescriptor? {
         if (!MoreElements.isAnnotationPresent(element.enclosingElement, dagger.Module::class.java)) {
             processingEnv.messager.printMessage(
                 Diagnostic.Kind.ERROR,
-                "@ContributeInjector must be in @Module class"
+                "@ContributesInjector must be in @Module class"
             )
             return null
         }
@@ -73,7 +73,7 @@ class ContributeInjectorProcessingStep(
             .forEach { builder.addScope(it) }
 
         val annotation =
-            MoreElements.getAnnotationMirror(element, ContributeInjector::class.java).get()
+            MoreElements.getAnnotationMirror(element, ContributesInjector::class.java).get()
 
         annotation.getTypeListValue("modules")
             .map { processingEnv.elementUtils.getTypeElement(it.toString()) }

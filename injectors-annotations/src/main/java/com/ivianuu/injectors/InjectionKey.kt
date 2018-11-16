@@ -19,7 +19,7 @@ package com.ivianuu.injectors
 import dagger.MapKey
 
 /**
- * Map key which will be used in [ContributeInjector] generated code
+ * Map key which will be used in [ContributesInjector] generated code
  */
 @Target(AnnotationTarget.FUNCTION)
 @MapKey

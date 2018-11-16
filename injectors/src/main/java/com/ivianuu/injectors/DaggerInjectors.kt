@@ -20,7 +20,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 /**
- * [Injector]'s which uses [ContributeInjector] generated code
+ * [Injector]'s which uses [ContributesInjector] generated code
  */
 class DaggerInjectors @Inject constructor(
     private val injectorFactories: Map<String, @JvmSuppressWildcards Provider<@JvmSuppressWildcards Injector.Factory<*>>>

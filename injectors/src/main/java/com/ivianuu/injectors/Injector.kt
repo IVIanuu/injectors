@@ -68,10 +68,10 @@ interface Injector<T : Any> {
  * Injects the [instance] or throws
  */
 fun <T : Any> Injector.Companion.inject(instance: T, injectorsFinder: (T) -> HasInjectors?) {
-    val hasInjectorStore = injectorsFinder(instance)
+    val hasInjectors = injectorsFinder(instance)
         ?: throw IllegalStateException("no injector found for ${instance.javaClass.name}")
-    val injectorStore = hasInjectorStore.injectors
-    val injector = injectorStore[instance]
+    val injectors = hasInjectors.injectors
+    val injector = injectors[instance]
     injector.inject(instance)
 }
 

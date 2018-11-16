@@ -16,7 +16,7 @@
 
 package com.ivianuu.injectors.sample
 
-import com.ivianuu.injectors.ContributeInjector
+import com.ivianuu.injectors.ContributesInjector
 import dagger.Module
 
 /**
@@ -26,6 +26,6 @@ import dagger.Module
 abstract class ActivityBindingModule {
 
     @PerActivity
-    @ContributeInjector(modules = [FragmentBindingModule_Contributions::class])
+    @ContributesInjector(modules = [FragmentBindingModule_Contributions::class])
     abstract fun bindMainActivity(): MainActivity
 }

@@ -21,6 +21,10 @@ import javax.inject.Scope
 @Scope
 annotation class PerActivity
 
+@Scope annotation class PerChildFragment
+
+@Scope annotation class PerFragment
+
 @Scope
 annotation class PerService
 

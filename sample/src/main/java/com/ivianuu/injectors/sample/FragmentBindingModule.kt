@@ -16,7 +16,7 @@
 
 package com.ivianuu.injectors.sample
 
-import com.ivianuu.injectors.ContributeInjector
+import com.ivianuu.injectors.ContributesInjector
 import dagger.Module
 
 /**
@@ -25,7 +25,8 @@ import dagger.Module
 @Module
 abstract class FragmentBindingModule {
 
-    @ContributeInjector(modules = [ChildFragmentBindingModule_Contributions::class])
+    @PerFragment
+    @ContributesInjector(modules = [ChildFragmentBindingModule_Contributions::class])
     abstract fun bindParentFragment(): ParentFragment
 
 }
