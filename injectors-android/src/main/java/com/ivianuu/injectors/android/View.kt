@@ -16,7 +16,6 @@
 
 package com.ivianuu.injectors.android
 
-import android.app.Service
 import android.view.View
 import com.ivianuu.injectors.HasInjectors
 import com.ivianuu.injectors.Injector

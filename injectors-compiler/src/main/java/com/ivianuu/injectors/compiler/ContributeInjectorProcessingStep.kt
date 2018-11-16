@@ -19,9 +19,13 @@ package com.ivianuu.injectors.compiler
 import com.google.auto.common.AnnotationMirrors
 import com.google.auto.common.BasicAnnotationProcessor
 import com.google.auto.common.MoreElements
+import com.google.auto.common.MoreElements.isAnnotationPresent
+import com.google.common.base.CaseFormat
+import com.google.common.base.Joiner
 import com.google.common.collect.SetMultimap
 import com.ivianuu.injectors.ContributesInjector
 import com.squareup.javapoet.ClassName
+import dagger.Module
 import javax.annotation.processing.ProcessingEnvironment
 import javax.inject.Scope
 import javax.lang.model.element.Element
@@ -58,7 +62,7 @@ class ContributeInjectorProcessingStep(
         mutableSetOf(ContributesInjector::class.java)
 
     private fun createContributeInjectorDescriptor(element: ExecutableElement): ContributeInjectorDescriptor? {
-        if (!MoreElements.isAnnotationPresent(element.enclosingElement, dagger.Module::class.java)) {
+        if (!isAnnotationPresent(element.enclosingElement, Module::class.java)) {
             processingEnv.messager.printMessage(
                 Diagnostic.Kind.ERROR,
                 "@ContributesInjector must be in @Module class"
@@ -66,21 +70,44 @@ class ContributeInjectorProcessingStep(
             return null
         }
 
-        val builder =
-            ContributeInjectorDescriptor.builder(element)
+        val enclosingModule = ClassName.get(element.enclosingElement as TypeElement)
 
-        AnnotationMirrors.getAnnotatedAnnotations(element, Scope::class.java)
-            .forEach { builder.addScope(it) }
+        val moduleName = enclosingModule
+            .topLevelClassName()
+            .peerClass(
+                Joiner.on('_').join(enclosingModule.simpleNames())
+                        + "_"
+                        + CaseFormat.LOWER_CAMEL.to(
+                    CaseFormat.UPPER_CAMEL,
+                    element.simpleName.toString()
+                )
+            )
+
+        val target = ClassName.bestGuess(element.returnType.toString())
+
+        val baseName = target.simpleName()
+        val subcomponentName = moduleName.nestedClass(baseName + "Subcomponent")
+        val subcomponentBuilderName = subcomponentName.nestedClass("Builder")
+
+        val scopes = AnnotationMirrors.getAnnotatedAnnotations(element, Scope::class.java)
 
         val annotation =
             MoreElements.getAnnotationMirror(element, ContributesInjector::class.java).get()
 
-        annotation.getTypeListValue("modules")
+        val modules = annotation.getTypeListValue("modules")
             .map { processingEnv.elementUtils.getTypeElement(it.toString()) }
             .map { ClassName.get(it) }
-            .forEach { builder.addModule(it) }
+            .toSet()
 
-        return builder.build()
+        return ContributeInjectorDescriptor(
+            element,
+            target,
+            moduleName,
+            modules,
+            scopes,
+            subcomponentName,
+            subcomponentBuilderName
+        )
     }
 
     private fun createContributesModuleDescriptors(contributions: List<ContributeInjectorDescriptor>): List<ContributionsModuleDescriptor> {

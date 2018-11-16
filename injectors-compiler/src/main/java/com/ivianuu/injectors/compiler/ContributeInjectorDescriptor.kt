@@ -16,14 +16,10 @@
 
 package com.ivianuu.injectors.compiler
 
-import com.google.common.base.CaseFormat
-import com.google.common.base.Joiner
 import com.squareup.javapoet.ClassName
 import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.TypeElement
 
-// todo remove builder
 data class ContributeInjectorDescriptor(
     val element: ExecutableElement,
     val target: ClassName,
@@ -32,76 +28,4 @@ data class ContributeInjectorDescriptor(
     val scopes: Set<AnnotationMirror>,
     val subcomponentName: ClassName,
     val subcomponentBuilderName: ClassName
-) {
-
-    class Builder internal constructor(
-        val element: ExecutableElement,
-        val target: ClassName,
-        val moduleName: ClassName,
-        val subcomponentName: ClassName,
-        val subcomponenBuilderName: ClassName
-    ) {
-
-        private val modules = mutableSetOf<ClassName>()
-        private val scopes = mutableSetOf<AnnotationMirror>()
-
-        fun addModule(module: ClassName): Builder {
-            modules.add(module)
-            return this
-        }
-
-        fun addScope(scope: AnnotationMirror): Builder {
-            scopes.add(scope)
-            return this
-        }
-
-        fun build(): ContributeInjectorDescriptor {
-            return ContributeInjectorDescriptor(
-                element,
-                target,
-                moduleName,
-                modules,
-                scopes,
-                subcomponentName,
-                subcomponenBuilderName
-            )
-        }
-
-    }
-
-    companion object {
-
-        fun builder(
-            element: ExecutableElement
-        ): Builder {
-            val enclosingModule = ClassName.get(element.enclosingElement as TypeElement)
-
-            val moduleName = enclosingModule
-                .topLevelClassName()
-                .peerClass(
-                    Joiner.on('_').join(enclosingModule.simpleNames())
-                            + "_"
-                            + CaseFormat.LOWER_CAMEL.to(
-                        CaseFormat.UPPER_CAMEL,
-                        element.simpleName.toString()
-                    )
-                )
-
-            val target = ClassName.bestGuess(element.returnType.toString())
-
-            val baseName = target.simpleName()
-            val subcomponentName = moduleName.nestedClass(baseName + "Subcomponent")
-            val subcomponenBuilderName = subcomponentName.nestedClass("Builder")
-
-            return Builder(
-                element,
-                target,
-                moduleName,
-                subcomponentName,
-                subcomponenBuilderName
-            )
-        }
-
-    }
-
-}
+)
