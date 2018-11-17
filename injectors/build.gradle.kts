@@ -30,9 +30,9 @@ java {
 }
 
 dependencies {
-    implementation(project(":injectors-annotations"))
-    implementation(Deps.dagger)
-    implementation(Deps.kotlinStdLib)
+    api(project(":injectors-annotations"))
+    api(Deps.dagger)
+    api(Deps.kotlinStdLib)
 }
 
 val sourcesJar = task("sourcesJar", Jar::class) {
