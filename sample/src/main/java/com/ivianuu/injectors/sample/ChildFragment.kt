@@ -23,9 +23,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.ivianuu.injectors.DaggerInjectors
+import com.ivianuu.injectors.CompositeInjectors
 import com.ivianuu.injectors.HasInjectors
-import com.ivianuu.injectors.Injectors
 import com.ivianuu.injectors.fragment.inject
 import javax.inject.Inject
 
@@ -34,7 +33,7 @@ import javax.inject.Inject
  */
 class ChildFragment : Fragment(), HasInjectors {
 
-    @Inject override lateinit var injectors: DaggerInjectors
+    @Inject override lateinit var injectors: CompositeInjectors
 
     @Inject lateinit var app: App
     @Inject lateinit var mainActivity: MainActivity

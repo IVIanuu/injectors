@@ -19,10 +19,8 @@ package com.ivianuu.injectors.sample
 import android.os.Build
 import android.service.quicksettings.TileService
 import androidx.annotation.RequiresApi
-import com.ivianuu.injectors.DaggerInjectors
+import com.ivianuu.injectors.CompositeInjectors
 import com.ivianuu.injectors.HasInjectors
-import com.ivianuu.injectors.Injector
-import com.ivianuu.injectors.inject
 import com.ivianuu.injectors.android.inject
 import javax.inject.Inject
 
@@ -32,7 +30,7 @@ import javax.inject.Inject
 @RequiresApi(Build.VERSION_CODES.N)
 class AwesomeTileService : TileService(), HasInjectors {
 
-    @Inject override lateinit var injectors: DaggerInjectors
+    @Inject override lateinit var injectors: CompositeInjectors
 
     @Inject lateinit var app: App
 

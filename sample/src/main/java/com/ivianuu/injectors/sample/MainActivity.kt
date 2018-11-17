@@ -18,15 +18,14 @@ package com.ivianuu.injectors.sample
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.ivianuu.injectors.DaggerInjectors
+import com.ivianuu.injectors.CompositeInjectors
 import com.ivianuu.injectors.HasInjectors
-import com.ivianuu.injectors.Injector
 import com.ivianuu.injectors.android.inject
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), HasInjectors {
 
-    @Inject override lateinit var injectors: DaggerInjectors
+    @Inject override lateinit var injectors: CompositeInjectors
 
     @Inject lateinit var app: App
 

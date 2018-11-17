@@ -51,8 +51,5 @@ dependencies {
     kapt(project(":injectors-compiler"))
 
     implementation(Deps.dagger)
-    implementation(Deps.daggerAndroid)
-    implementation(Deps.daggerAndroidSupport)
     kapt(Deps.daggerCompiler)
-    kapt(Deps.daggerAndroidProcessor)
 }

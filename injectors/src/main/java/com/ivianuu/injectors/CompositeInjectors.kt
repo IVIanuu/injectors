@@ -22,7 +22,8 @@ import javax.inject.Provider
 /**
  * [Injector]'s which uses [ContributesInjector] generated code
  */
-class DaggerInjectors @Inject constructor(
+// todo find a better name
+class CompositeInjectors @Inject constructor(
     private val injectorFactories: Map<String, @JvmSuppressWildcards Provider<@JvmSuppressWildcards Injector.Factory<*>>>
 ) : Injectors {
 

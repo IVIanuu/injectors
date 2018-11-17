@@ -17,7 +17,7 @@
 package com.ivianuu.injectors.sample
 
 import android.app.Application
-import com.ivianuu.injectors.DaggerInjectors
+import com.ivianuu.injectors.CompositeInjectors
 import com.ivianuu.injectors.HasInjectors
 import com.ivianuu.injectors.Injector
 import com.ivianuu.injectors.InjectorModule
@@ -30,7 +30,7 @@ import javax.inject.Singleton
  */
 class App : Application(), HasInjectors {
 
-    @Inject override lateinit var injectors: DaggerInjectors
+    @Inject override lateinit var injectors: CompositeInjectors
 
     override fun onCreate() {
         super.onCreate()

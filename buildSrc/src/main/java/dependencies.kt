@@ -34,10 +34,7 @@ object Deps {
     const val autoService = "com.google.auto.service:auto-service:${Versions.autoService}"
 
     const val dagger = "com.google.dagger:dagger:${Versions.dagger}"
-    const val daggerAndroid = "com.google.dagger:dagger-android:${Versions.dagger}"
-    const val daggerAndroidSupport = "com.google.dagger:dagger-android-support:${Versions.dagger}"
     const val daggerCompiler = "com.google.dagger:dagger-compiler:${Versions.dagger}"
-    const val daggerAndroidProcessor = "com.google.dagger:dagger-android-processor:${Versions.dagger}"
 
     const val javaPoet = "com.squareup:javapoet:${Versions.javaPoet}"
 
