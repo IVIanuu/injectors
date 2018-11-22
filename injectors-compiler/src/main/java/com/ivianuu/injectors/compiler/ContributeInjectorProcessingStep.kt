@@ -93,7 +93,8 @@ class ContributeInjectorProcessingStep : ProcessingStep, ProcessingEnvHolder {
             if (!includes.map { it.toString() }.contains(it.moduleName.toString())) {
                 messager.printMessage(
                     Diagnostic.Kind.ERROR,
-                    "@ContributesInjector modules must include the generated module"
+                    "@ContributesInjector modules must include the generated module",
+                    moduleElement
                 )
             }
         }
