@@ -22,7 +22,7 @@ import dagger.Module
 /**
  * @author Manuel Wrage (IVIanuu)
  */
-@Module
+@Module(includes = [ServiceBindingModule_Contributions::class])
 abstract class ServiceBindingModule {
 
     @PerService

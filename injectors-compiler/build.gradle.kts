@@ -31,17 +31,13 @@ java {
 }
 
 dependencies {
-    implementation(Deps.autoCommon)
-
-    implementation(Deps.autoService)
-    kapt(Deps.autoService)
-
     implementation(project(":injectors"))
     implementation(project(":injectors-annotations"))
 
-    implementation(Deps.javaPoet)
-
     implementation(Deps.kotlinStdLib)
+
+    implementation(Deps.processingX)
+    kapt(Deps.processingX)
 }
 
 val sourcesJar = task("sourcesJar", Jar::class) {

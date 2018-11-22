@@ -22,11 +22,11 @@ import dagger.Module
 /**
  * @author Manuel Wrage (IVIanuu)
  */
-@Module
+@Module(includes = [FragmentBindingModule_Contributions::class])
 abstract class FragmentBindingModule {
 
     @PerFragment
-    @ContributesInjector(modules = [ChildFragmentBindingModule_Contributions::class])
+    @ContributesInjector(modules = [ChildFragmentBindingModule::class])
     abstract fun bindParentFragment(): ParentFragment
 
 }

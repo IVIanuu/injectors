@@ -16,14 +16,13 @@
 
 package com.ivianuu.injectors.compiler
 
-import com.google.auto.common.BasicAnnotationProcessor
 import com.google.auto.service.AutoService
+import com.ivianuu.processingx.StepProcessor
 import javax.annotation.processing.Processor
 
 @AutoService(Processor::class)
-class InjectorsProcessor : BasicAnnotationProcessor() {
+class InjectorsProcessor : StepProcessor() {
 
-    override fun initSteps() =
-        mutableSetOf(ContributeInjectorProcessingStep(processingEnv))
+    override fun initSteps() = setOf(ContributeInjectorProcessingStep())
 
 }

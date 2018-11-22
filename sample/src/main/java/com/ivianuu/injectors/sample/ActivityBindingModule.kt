@@ -22,10 +22,11 @@ import dagger.Module
 /**
  * @author Manuel Wrage (IVIanu
  */
-@Module
+@Module(includes = [ActivityBindingModule_Contributions::class])
 abstract class ActivityBindingModule {
 
     @PerActivity
-    @ContributesInjector(modules = [FragmentBindingModule_Contributions::class])
+    @ContributesInjector(modules = [FragmentBindingModule::class])
     abstract fun bindMainActivity(): MainActivity
+
 }

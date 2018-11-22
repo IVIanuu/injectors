@@ -16,14 +16,22 @@
 
 package com.ivianuu.injectors.compiler
 
-import com.google.auto.common.AnnotationMirrors
-import com.google.auto.common.BasicAnnotationProcessor
-import com.google.auto.common.MoreElements
-import com.google.auto.common.MoreElements.isAnnotationPresent
 import com.google.common.base.CaseFormat
 import com.google.common.base.Joiner
 import com.google.common.collect.SetMultimap
 import com.ivianuu.injectors.ContributesInjector
+import com.ivianuu.processingx.ProcessingEnvHolder
+import com.ivianuu.processingx.ProcessingStep
+import com.ivianuu.processingx.asJavaClassName
+import com.ivianuu.processingx.asJavaTypeName
+import com.ivianuu.processingx.elementUtils
+import com.ivianuu.processingx.filer
+import com.ivianuu.processingx.getAnnotatedAnnotations
+import com.ivianuu.processingx.getAnnotationMirror
+import com.ivianuu.processingx.getAsTypeList
+import com.ivianuu.processingx.hasAnnotation
+import com.ivianuu.processingx.messager
+import com.ivianuu.processingx.validateAll
 import com.squareup.javapoet.ClassName
 import dagger.Module
 import javax.annotation.processing.ProcessingEnvironment
@@ -34,9 +42,23 @@ import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic
 
-class ContributeInjectorProcessingStep(
-    private val processingEnv: ProcessingEnvironment
-) : BasicAnnotationProcessor.ProcessingStep {
+class ContributeInjectorProcessingStep : ProcessingStep, ProcessingEnvHolder {
+
+    override lateinit var processingEnv: ProcessingEnvironment
+
+    private val contributionModules = mutableSetOf<ContributionsModuleDescriptor>()
+
+    override fun init(processingEnv: ProcessingEnvironment) {
+        super.init(processingEnv)
+        this.processingEnv = processingEnv
+    }
+
+    override fun annotations() =
+        setOf(ContributesInjector::class.java)
+
+    override fun validate(annotationClass: Class<out Annotation>, element: Element) =
+    // we only need to know about the annotations
+        element.annotationMirrors.validateAll()
 
     override fun process(elementsByAnnotation: SetMultimap<Class<out Annotation>, Element>): MutableSet<Element> {
         val descriptors = elementsByAnnotation[ContributesInjector::class.java]
@@ -48,29 +70,45 @@ class ContributeInjectorProcessingStep(
         descriptors
             .map { ContributeInjectorGenerator(it) }
             .map { it.generate() }
-            .forEach { writeFile(processingEnv, it) }
+            .forEach { it.writeTo(filer) }
 
         createContributesModuleDescriptors(descriptors)
+            .onEach { contributionModules.add(it) }
             .map { ContributionsModuleGenerator(it) }
             .map { it.generate() }
-            .forEach { writeFile(processingEnv, it) }
+            .forEach { it.writeTo(filer) }
 
         return mutableSetOf()
     }
 
-    override fun annotations() =
-        mutableSetOf(ContributesInjector::class.java)
+    override fun postRound(processingOver: Boolean) {
+        if (!processingOver) return
+
+        contributionModules.forEach {
+            val moduleElement = elementUtils.getTypeElement(it.target.toString())
+
+            val moduleAnnotation = moduleElement.getAnnotationMirror<Module>()
+            val includes = moduleAnnotation.getAsTypeList("includes")
+
+            if (!includes.map { it.toString() }.contains(it.moduleName.toString())) {
+                messager.printMessage(
+                    Diagnostic.Kind.ERROR,
+                    "@ContributesInjector modules must include the generated module"
+                )
+            }
+        }
+    }
 
     private fun createContributeInjectorDescriptor(element: ExecutableElement): ContributeInjectorDescriptor? {
-        if (!isAnnotationPresent(element.enclosingElement, Module::class.java)) {
-            processingEnv.messager.printMessage(
+        if (!element.enclosingElement.hasAnnotation<Module>()) {
+            messager.printMessage(
                 Diagnostic.Kind.ERROR,
                 "@ContributesInjector must be in @Module class"
             )
             return null
         }
 
-        val enclosingModule = ClassName.get(element.enclosingElement as TypeElement)
+        val enclosingModule = (element.enclosingElement as TypeElement).asJavaClassName()
 
         val moduleName = enclosingModule
             .topLevelClassName()
@@ -83,20 +121,20 @@ class ContributeInjectorProcessingStep(
                 )
             )
 
-        val target = ClassName.bestGuess(element.returnType.toString())
+        val target = element.returnType.asJavaTypeName() as ClassName
 
         val baseName = target.simpleName()
         val subcomponentName = moduleName.nestedClass(baseName + "Subcomponent")
         val subcomponentBuilderName = subcomponentName.nestedClass("Builder")
 
-        val scopes = AnnotationMirrors.getAnnotatedAnnotations(element, Scope::class.java)
+        val scopes = element.getAnnotatedAnnotations<Scope>()
 
         val annotation =
-            MoreElements.getAnnotationMirror(element, ContributesInjector::class.java).get()
+            element.getAnnotationMirror<ContributesInjector>()
 
-        val modules = annotation.getTypeListValue("modules")
-            .map { processingEnv.elementUtils.getTypeElement(it.toString()) }
-            .map { ClassName.get(it) }
+        val modules = annotation.getAsTypeList("modules")
+            .map { elementUtils.getTypeElement(it.toString()) }
+            .map { it.asJavaClassName() }
             .toSet()
 
         return ContributeInjectorDescriptor(
@@ -119,6 +157,7 @@ class ContributeInjectorProcessingStep(
             val contributionsName =
                 ClassName.bestGuess(module.qualifiedName.toString() + "_Contributions")
             ContributionsModuleDescriptor(
+                module.asJavaClassName(),
                 contributionsName,
                 module.modifiers.contains(Modifier.PUBLIC),
                 descriptors.toSet()

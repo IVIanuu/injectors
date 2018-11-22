@@ -19,6 +19,7 @@ package com.ivianuu.injectors.compiler
 import com.squareup.javapoet.ClassName
 
 data class ContributionsModuleDescriptor(
+    val target: ClassName,
     val moduleName: ClassName,
     val isPublic: Boolean,
     val contributions: Set<ContributeInjectorDescriptor>

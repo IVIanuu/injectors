@@ -44,9 +44,9 @@ class App : Application(), HasInjectors {
 @Singleton
 @Component(
     modules = [
-        ActivityBindingModule_Contributions::class,
+        ActivityBindingModule::class,
         InjectorModule::class,
-        ServiceBindingModule_Contributions::class
+        ServiceBindingModule::class
     ]
 )
 interface AppComponent : Injector<App> {
